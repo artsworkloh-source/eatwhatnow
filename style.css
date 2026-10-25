@@ -1,0 +1,159 @@
+* { box-sizing: border-box; }
+/* Stop iOS from enlarging text on its own when the phone is turned sideways. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+[hidden] { display: none !important; }
+
+body {
+  --bg: #FFF4E0;
+  --card: #FFFBF3;
+  --primary: #F28C0F;
+  --ring: rgba(242, 140, 15, 0.25);
+  --text: #2B2B2B;
+  --muted: #6B6B6B;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+  font-weight: bold;
+  -webkit-tap-highlight-color: transparent;
+}
+body[data-meal="lunch"] {
+  --bg: #EAF7EC;
+  --card: #F6FCF7;
+  --primary: #2E9E5E;
+  --ring: rgba(46, 158, 94, 0.25);
+}
+body[data-meal="dinner"] {
+  --bg: #1F2A44;
+  --card: #2A3757;
+  --primary: #FF8A3D;
+  --ring: rgba(255, 138, 61, 0.25);
+  --text: #FFFFFF;
+  --muted: #C5CBD8;
+}
+
+main {
+  max-width: 480px;
+  /* dvh follows the browser's moving address bar; vh is the fallback for older phones. */
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: calc(20px + env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+}
+.meal-label { margin: 0; text-align: center; font-size: 14px; color: var(--muted); }
+
+/* Auto margins centre the button or card, but unlike align-items they never push
+   a too-tall card above the top of the screen where it can't be scrolled to. */
+.stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.pick {
+  position: relative;
+  /* Sits a little below the middle: half of 18% of the column width. */
+  top: calc((min(100vw, 480px) - 40px) * 0.09);
+  margin: auto;
+  /* The height cap only matters with the phone sideways. */
+  width: min(60vw, 288px, 50vh);
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #FFFFFF;
+  font: inherit;
+  font-size: 28px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+.pick::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--ring);
+  animation: breathe 2.4s ease-in-out infinite;
+}
+.pick.press { animation: press 0.2s ease-out; }
+
+.card {
+  width: 100%;
+  margin: auto 0;
+  padding: 32px 20px 20px;
+  border-radius: 28px;
+  background: var(--card);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  animation: pop 0.25s ease-out;
+}
+.card .emoji { font-size: 96px; line-height: 1.1; }
+.card .name { margin: 12px 0 8px; font-size: 40px; white-space: nowrap; }
+.card .desc { margin: 0 0 28px; font-size: 14px; font-weight: normal; color: var(--muted); }
+
+.map, .again {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 18px;
+  text-decoration: none;
+}
+.map { height: 56px; background: var(--primary); color: #FFFFFF; }
+.hint { margin: 8px 0 16px; font-size: 12px; font-weight: normal; color: var(--muted); }
+.again { height: 44px; border: 2px solid var(--primary); background: transparent; color: var(--primary); }
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+@keyframes press {
+  50% { transform: scale(0.92); }
+}
+@keyframes pop {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.install {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: normal;
+  color: var(--muted);
+}
+.install-text { flex: 1; }
+.install-add, .install-close {
+  flex: none;
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--primary);
+}
+.install-add { padding: 6px 12px; border: 1px solid var(--primary); border-radius: 999px; font-weight: bold; }
+.install-close { padding: 6px; font-size: 16px; color: var(--muted); }
+
+/* var(--muted) is the agreed #6B6B6B, lightened only on the dark dinner background. */
+.privacy-link {
+  align-self: center;
+  margin-top: 8px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--muted);
+}
+
+.doc { display: block; font-weight: normal; font-size: 15px; line-height: 1.6; }
+.doc h1 { margin: 16px 0 4px; font-size: 28px; }
+.doc h2 { margin: 24px 0 4px; font-size: 18px; }
+.doc p, .doc ul { margin: 0 0 8px; }
+.doc ul { padding-left: 20px; }
+.doc a { color: inherit; }
+.doc .back { display: inline-block; padding: 8px 0; font-weight: bold; text-decoration: none; color: var(--primary); }
+.doc .updated { font-size: 13px; color: var(--muted); }
