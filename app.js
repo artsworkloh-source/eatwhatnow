@@ -155,12 +155,42 @@ installClose.addEventListener("click", () => {
   installTip.hidden = true;
 });
 
+// Anonymous totals only. The name is the whole event; nothing about the person is sent.
+function countEvent(name) {
+  const send = () => {
+    if (!window.goatcounter || !window.goatcounter.count) return false;
+    window.goatcounter.count({ path: name, title: name, event: true, no_session: true });
+    return true;
+  };
+  if (send()) return;
+  const wait = setInterval(() => { if (send()) clearInterval(wait); }, 200);
+  setTimeout(() => clearInterval(wait), 5000);
+}
+
 // Let the 0.2s press bounce finish before the button turns into the card.
-pickButton.addEventListener("click", () => pickButton.classList.add("press"));
+pickButton.addEventListener("click", () => {
+  pickButton.classList.add("press");
+  countEvent("大按钮");
+});
 pickButton.addEventListener("animationend", (e) => {
   if (e.animationName !== "press") return;
   pickButton.classList.remove("press");
   pick();
 });
 againButton.addEventListener("click", pick);
+
+// Android Chrome fires this when the site is added to the home screen.
+addEventListener("appinstalled", () => countEvent("安装到主屏幕"));
+
+// iPhone has no install event, so an open from the home screen icon is the signal.
+// sessionStorage keeps it to one count per visit; a new open starts a new session.
+if (matchMedia("(display-mode: standalone)").matches || navigator.standalone === true) {
+  let counted = false;
+  try { counted = sessionStorage.getItem("home-open") === "1"; } catch {}
+  if (!counted) {
+    try { sessionStorage.setItem("home-open", "1"); } catch {}
+    countEvent("主屏幕打开");
+  }
+}
+
 showMeal();
