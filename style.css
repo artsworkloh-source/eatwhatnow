@@ -91,7 +91,8 @@ main {
 }
 .card .emoji { font-size: 96px; line-height: 1.1; }
 .card .name { margin: 12px 0 8px; font-size: 40px; white-space: nowrap; }
-.card .desc { margin: 0 0 28px; font-size: 14px; font-weight: normal; color: var(--muted); }
+.card .desc { margin: 0; font-size: 14px; font-weight: normal; color: var(--muted); }
+.halal-note { margin: 10px 0 0; font-size: 12px; font-weight: normal; line-height: 1.4; color: var(--muted); }
 
 .map, .again {
   display: flex;
@@ -103,7 +104,7 @@ main {
   font-size: 18px;
   text-decoration: none;
 }
-.map { height: 56px; background: var(--primary); color: #FFFFFF; }
+.map { height: 56px; margin-top: 28px; background: var(--primary); color: #FFFFFF; }
 .hint { margin: 8px 0 16px; font-size: 12px; font-weight: normal; color: var(--muted); }
 .again { height: 44px; border: 2px solid var(--primary); background: transparent; color: var(--primary); }
 
@@ -157,3 +158,55 @@ main {
 .doc a { color: inherit; }
 .doc .back { display: inline-block; padding: 8px 0; font-weight: bold; text-decoration: none; color: var(--primary); }
 .doc .updated { font-size: 13px; color: var(--muted); }
+
+#app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.pref-open {
+  display: block;
+  margin: 8px auto 0;
+  padding: 4px 12px;
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  font-weight: normal;
+  color: var(--primary);
+}
+
+.pref {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.pref h1 { margin: 0 0 20px; text-align: center; font-size: 28px; }
+.pref-options { display: flex; flex-direction: column; gap: 12px; }
+.chip, .pref-save {
+  width: 100%;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 18px;
+}
+.chip {
+  height: 52px;
+  border: 2px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+}
+.chip.on { background: var(--primary); color: #FFFFFF; }
+.chip-any { margin-top: 8px; }
+.pref-save {
+  height: 56px;
+  margin-top: 20px;
+  border: none;
+  background: var(--primary);
+  color: #FFFFFF;
+}
+.pref-save:disabled { opacity: 0.4; }
+
+.empty-text { margin: 8px 0 24px; font-size: 18px; font-weight: normal; line-height: 1.5; }
