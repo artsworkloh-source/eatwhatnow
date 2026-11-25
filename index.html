@@ -23,7 +23,7 @@
   <link rel="manifest" href="manifest.webmanifest?v=6f5630d001">
   <link rel="icon" href="icon-192.png?v=d509adf6dc" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=3a6b881c4d">
-  <link rel="stylesheet" href="style.css?v=3439e57109">
+  <link rel="stylesheet" href="style.css?v=cee01a1a8e">
 </head>
 <body>
   <main>
@@ -40,9 +40,16 @@
 
     <div id="app" hidden>
       <p id="meal-label" class="meal-label"></p>
-      <button type="button" id="pref-open" class="pref-open"></button>
+      <div class="top-row">
+        <button type="button" id="pref-open" class="pref-open"></button>
+        <button type="button" id="daily-open" class="pref-open"></button>
+        <button type="button" id="vote-open" class="pref-open"></button>
+        <button type="button" id="sound-toggle" class="pref-open"></button>
+      </div>
+      <p id="shake-hint" class="shake-hint" hidden></p>
+      <button type="button" id="shake-enable" class="shake-enable" hidden></button>
 
-      <div class="stage">
+      <div id="stage" class="stage">
         <button id="pick" class="pick"></button>
 
         <section id="result" class="card" hidden>
@@ -51,6 +58,7 @@
           <p class="desc"></p>
           <p class="halal-note" hidden></p>
           <a id="map-link" class="map" target="_blank" rel="noopener"></a>
+          <a id="open-link" class="open-now" target="_blank" rel="noopener"></a>
           <p class="hint"></p>
           <button id="again" class="again"></button>
         </section>
@@ -58,6 +66,30 @@
         <section id="empty" class="card empty" hidden>
           <p class="empty-text"></p>
           <button type="button" id="empty-pref" class="again"></button>
+        </section>
+
+        <div id="after" hidden>
+          <button type="button" id="share-open" class="share-open"></button>
+        </div>
+
+        <section id="share-panel" class="panel" hidden>
+          <img id="share-preview" alt="">
+          <div class="stack">
+            <button type="button" id="share-native" class="map"></button>
+            <a id="share-wa" class="open-now" target="_blank" rel="noopener"></a>
+            <button type="button" id="share-save" class="again"></button>
+            <button type="button" id="share-close" class="text-btn"></button>
+          </div>
+          <p id="share-note" class="hint" hidden></p>
+        </section>
+
+        <section id="daily" class="card daily" hidden>
+          <p id="daily-kicker" class="kicker"></p>
+          <div id="daily-emoji" class="emoji"></div>
+          <h2 id="daily-name" class="name"></h2>
+          <p id="daily-quote" class="quote"></p>
+          <p id="daily-streak" class="streak"></p>
+          <button type="button" id="daily-close" class="again"></button>
         </section>
       </div>
 
@@ -68,10 +100,67 @@
       </div>
       <a id="privacy-link" class="privacy-link" href="privacy.html"></a>
     </div>
+
+    <section id="vote" class="vote" hidden>
+      <h1 id="vote-title"></h1>
+      <p id="vote-sub" class="vote-sub"></p>
+      <div id="vote-list"></div>
+      <p id="vote-allout" class="vote-note" hidden></p>
+      <p id="vote-result" class="vote-result" hidden></p>
+      <a id="vote-dish" class="again vote-dish" hidden></a>
+      <div class="vote-actions">
+        <button type="button" id="vote-pass" class="map"></button>
+        <button type="button" id="vote-draw" class="again"></button>
+      </div>
+      <p id="vote-link-label" class="vote-sub"></p>
+      <p id="vote-link" class="vote-link"></p>
+      <p id="vote-copied" class="vote-note" hidden></p>
+      <a id="vote-home" class="vote-home" href="./"></a>
+      <a class="privacy-link" href="privacy.html"></a>
+    </section>
   </main>
+  <!-- Drop the page query before it reaches the counter, so dish ids and vote lists are not sent. -->
+  <script>
+    window.goatcounter = {
+      path: function (p) {
+        if (!p || p.charAt(0) !== "/") return p;
+        var i = p.indexOf("?");
+        return i === -1 ? p : p.slice(0, i);
+      }
+    };
+    (function () {
+      function scrub(url) {
+        try {
+          var u = new URL(url, location.href);
+          if (u.hostname !== "eatwhat.goatcounter.com" && u.hostname !== "gc.zgo.at") return url;
+          u.searchParams.delete("q");
+          var p = u.searchParams.get("p");
+          if (p && p.indexOf("?") !== -1) u.searchParams.set("p", p.split("?")[0]);
+          return u.toString();
+        } catch (e) {
+          return url;
+        }
+      }
+      if (navigator.sendBeacon) {
+        var send = navigator.sendBeacon.bind(navigator);
+        navigator.sendBeacon = function (url, data) {
+          return send(scrub(String(url)), data);
+        };
+      }
+      var desc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, "src");
+      if (desc && desc.set) {
+        Object.defineProperty(HTMLImageElement.prototype, "src", {
+          configurable: true,
+          enumerable: desc.enumerable,
+          get: desc.get,
+          set: function (value) { desc.set.call(this, scrub(String(value))); }
+        });
+      }
+    })();
+  </script>
   <script data-goatcounter="https://eatwhat.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
   <script src="i18n.js?v=a7878b21c9"></script>
-  <script src="foods.js?v=f3e176b50e"></script>
-  <script src="app.js?v=339c57399c"></script>
+  <script src="foods.js?v=b533c323d1"></script>
+  <script src="app.js?v=7cfcf7bcc5"></script>
 </body>
 </html>
